@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<mujoco xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="head_friction" value="1.0" />
+  <xacro:property name="head_damping"  value="0.5" />
+  <xacro:property name="head_max_vel"  value="3.0" />
+  <xacro:property name="head_1_lower_limit" value="-75"/>
+  <xacro:property name="head_1_upper_limit" value="75"/>
+  <xacro:property name="head_2_lower_limit" value="-60"/>
+  <xacro:property name="head_2_upper_limit" value="45"/>
+
+  <xacro:macro name="head" params="name" >
+    <body name="${name}_head_1_link" pos="0.182 0.0 0.0" >
+      <inertial mass="0.6222" pos="-0.00508 0.00237 0.07229" fullinertia="0.001192 0.001402 0.000889 -0.000007 0.000096 0.000004" />
+      <joint name="head_1_joint" axis="0 0 1" limited="true" range="${head_1_lower_limit / 180 * pi} ${head_1_upper_limit / 180 * pi}" damping="0.5" frictionloss="1" />
+      <geom name="${name}_head_1" type="mesh" rgba="1 1 1 1" mesh="head_1" />
+
+      <body name="${name}_head_2_link" pos="0.005 0.0 0.098" quat="0.7071068 0.7071068 0 0" >
+        <inertial mass="0.66123" pos="0.04700 0.05542 0.00022" fullinertia="0.00462 0.004861 0.003132 0.000689 0.000006 0.000006" />
+        <joint name="head_2_joint" axis="0 0 1" limited="true" range="${head_2_lower_limit / 180 * pi} ${head_2_upper_limit / 180 * pi}" damping="0.5" frictionloss="1" />
+        <geom name="${name}_head_2" rgba="1 1 1 1" type="mesh" mesh="head_2" />
+      </body>
+    </body>
+  </xacro:macro>
+</mujoco>
+

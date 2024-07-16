@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<mujoco xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--Constant parameters-->
+  <xacro:property name="wrist_friction"        value="1.0" />
+  <xacro:property name="wrist_damping"         value="1.0" />
+  <xacro:property name="wrist_1_max_vel"       value="1.95" />
+  <xacro:property name="wrist_2_max_vel"       value="1.76" />
+  <xacro:property name="wrist_3_max_vel"       value="1.76" />
+  <xacro:property name="wrist_1_max_effort"    value="3" />
+  <xacro:property name="wrist_2_max_effort"    value="6.6" />
+  <xacro:property name="wrist_3_max_effort"    value="6.6" />
+
+  <xacro:include filename="$(find tiago_mujoco)/assets/xacro/end_effector.mujoco.xacro" />
+
+  <xacro:if value="${wrist_model == 'wrist-2010'}">
+    <xacro:property name="wrist_6_range"       value="${ 81 if has_ft_sensor else 90 }"/>
+    <xacro:property name="tool_link_z_offset"  value="0.046"/>
+  </xacro:if>
+  <xacro:if value="${wrist_model == 'wrist-2017'}">
+    <xacro:property name="wrist_6_range"       value="81"/>
+     <xacro:property name="tool_link_z_offset" value="${ 0.046 if has_ft_sensor else 0.0573 }"/>
+  </xacro:if>
+
+  <xacro:macro name="wrist" params="name reflect wrist_model has_ft_sensor" >
+    <body name="${name}_5_link" pos="${reflect * -0.162} ${reflect*0.02} ${reflect * 0.027}" quat="0.707107 0 -0.707107 0" >
+      <xacro:if value="${wrist_model == 'wrist-2010'}" >
+        <inertial mass="1.655819" pos="0.001078 -0.000151 ${reflect * -0.077173}" fullinertia="0.006138 0.00564 0.001797 -0.000004 0.000156 0.000022" />
+      </xacro:if>
+      <xacro:if value="${wrist_model == 'wrist-2017'}">
+        <inertial mass="0.9359143689" pos="0.001078 -0.000151 ${reflect * -0.077173}" fullinertia="0.001036187977 0.000794527176366096 0.000439831229979178 1.0622321E-07 1.9920336E-06 -2.56396106998404E-07" />
+      </xacro:if>
+      <joint name="${name}_5_joint" axis="0 0 1" limited="true" range="${-120.0 / 180 * pi} ${120.0 / 180 * pi}" damping="0.5" frictionloss="1" />
+      <geom name="${name}_5" type="mesh" rgba="1 1 1 1" mesh="arm_5" />
+
+      <body name="${name}_6_link" pos="0 0 ${reflect * 0.15}" quat="0.5 -0.5 -0.5 -0.5" >
+        <xacro:if value="${wrist_model == 'wrist-2010'}">
+          <inertial mass="0.370063" pos="-0.000153 -0.003122 0.000183" fullinertia="0.000215 0.00017 0.000174 0.0 0.0 0.000002" />
+        </xacro:if>
+        <xacro:if value="${wrist_model == 'wrist-2017'}">
+          <inertial mass="0.30275767222" pos="-0.000153 -0.003122 0.000183" fullinertia="3.29233557E-05 3.85334410118923E-05 3.33282849168039E-05 6.31537395E-08 -4.567124912E-11 -2.01613082836742E-07" />
+        </xacro:if>
+        <joint name="${name}_6_joint" axis="0 0 1" limited="true" range="${-wrist_6_range / 180 * pi} ${wrist_6_range / 180 * pi}" damping="0.5" frictionloss="1" />
+        <geom name="${name}_6" type="mesh" rgba="1 1 1 1" mesh="arm_6" />
+
+        <body name="${name}_7_link" quat="0.5 0.5 0.5 0.5" >
+          <xacro:if value="${wrist_model == 'wrist-2010'}">
+            <inertial mass="0.234252" pos="0.000010 -0.000003 -0.007774" fullinertia="0.000142 0.000113 0.000052 0. 0. 0." />
+          </xacro:if>
+          <xacro:if value="${wrist_model == 'wrist-2017'}">
+            <inertial mass="0.100" pos="0.000010 -0.000003 -0.007774" fullinertia="1.14959795E-05 1.13594084240734E-05 2.01898984804048E-05 1.390727219E-07 5.930207406E-09 -1.78396260812528E-08" />
+          </xacro:if>
+          <joint name="${name}_7_joint" axis="0 0 1" limited="true" range="${-120.0/ 180 * pi} ${120.0 / 180 * pi}" damping="0.5" frictionloss="1" />
+        
+          <body name="${name}_tool_link" pos="0 0 ${reflect * tool_link_z_offset + 0.0025}" quat="-0.5 0.5 0.5 0.5">
+            <inertial mass="0.1" pos="0. 0. 0." fullinertia="8.33E-07 8.33E-07 1.25E-06 0. 0. 0." />
+            <geom name="${name}_tool" pos="0.001 0 0" quat="0.707107 0 0.707107 0." type="cylinder" size="0.005 0.0025" />
+          
+            <xacro:tiago_end_effector name="${end_effector_name}" type="${end_effector}" has_end_effector="${has_end_effector}" reflect="1" />
+          </body>
+        </body>
+      </body>
+    </body>
+  </xacro:macro>
+</mujoco>
+
+
