@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<mujoco xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--Constant parameters-->
+  <xacro:property name="arm_friction"       value="1.0" />
+  <xacro:property name="arm_damping"        value="1.0" />
+  <xacro:property name="arm_1_max_vel"      value="1.95" />
+  <xacro:property name="arm_2_max_vel"      value="1.95" />
+  <xacro:property name="arm_3_max_vel"      value="2.35" />
+  <xacro:property name="arm_4_max_vel"      value="2.35" />
+  <xacro:property name="arm_1_max_effort"   value="43.0" />
+  <xacro:property name="arm_2_max_effort"   value="43.0" />
+  <xacro:property name="arm_3_max_effort"   value="26" />
+  <xacro:property name="arm_4_max_effort"   value="26" />
+
+  <xacro:property name="arm_1_upper_limit"  value="157.5" />
+  <xacro:property name="arm_1_lower_limit"  value="0.0" />
+  <xacro:property name="arm_2_upper_limit"  value="62.5" />
+  <xacro:property name="arm_2_lower_limit"  value="-90.0" />
+  <xacro:property name="arm_3_lower_limit"  value="-202.5" />
+  <xacro:property name="arm_3_upper_limit"  value="90.0" />
+
+  <xacro:include filename="$(find tiago_mujoco)/assets/xacro/wrist.mujoco.xacro" />
+
+  <!-- reflect: Set to 1 for a right arm, or to -1 for a left arm-->
+  <xacro:macro name="tiago_arm" params="name wrist_model has_ft_sensor reflect xyz quat" >
+    <body name="${name}_1_link" pos="${xyz}" quat="${quat}" >
+      <inertial mass="1.563428" pos="0.061191 -0.022397 ${reflect * -0.012835}" quat="${'0.161963 0.538347 0.345223 0.751513' if reflect == 1 else '0.751513 0.345223 0.538347 0.161963'}" diaginertia="0.00510233 0.00510233 0.00510233" />
+      <!-- This is the original port, but the inertia matrix violates the A+B >= C diag condition -->
+      <!-- <inertial mass="1.563428" pos="0.061191 -0.022397 ${reflect * -0.012835}" fullinertia="0.002471 0.006132 0.006704 ${reflect * -0.001809} -0.001202 ${reflect * 0.000494}" /> -->
+      <joint name="${name}_1_joint" axis="0 0 1" limited="true" range="${arm_1_lower_limit / 180 * pi} ${arm_1_upper_limit / 180 * pi}" damping="0.5" frictionloss="1" />
+      <geom name="${name}_arm_1"   type="mesh" mesh="${'arm_1_L' if reflect == -1 else 'arm_1'}"     group="2" rgba="0.9 0.9 0.9 1" contype="0" conaffinity="0" />
+      <geom name="${name}_arm_1_c" type="mesh" mesh="${'arm_1_L_c' if reflect == -1 else 'arm_1_c'}" group="3" rgba="0.9 0.9 0.9 1" />
+
+      <body name="${name}_2_link" pos="0.125 0.0195 ${reflect * -0.031}" quat="0.7071068 ${reflect * 0.7071068} 0 0" >
+        <inertial mass="1.800397" pos="0.030432 0.000229 ${reflect * -0.005942}" quat="${'0.126897 0.72859 0.136233 0.659161' if reflect == 1 else '-0.121042 0.662923 -0.105352 0.731289'}" diaginertia="0.00437229 0.00432701 0.0017837"/>
+        <!-- original port with broken inertia -->
+        <!-- <inertial mass="1.800397" pos="0.030432 0.000229 ${reflect * -0.005942}" fullinertia="0.001809 0.004333 0.004341 ${reflect * 0.000015} ${reflect * 0.000254} ${reflect * 0.000014}"/> -->
+        <joint name="${name}_2_joint" axis="0 0 1" limited="true" range="${arm_2_lower_limit / 180 * pi} ${arm_2_upper_limit / 180 * pi}" damping="0.5" frictionloss="1" />
+        <geom name="${name}_arm_2"   type="mesh" mesh="${'arm_2_L' if reflect == -1 else 'arm_2'}"     group="2" rgba="0.9 0.9 0.9 1" contype="0" conaffinity="0" />
+        <geom name="${name}_arm_2_c" type="mesh" mesh="${'arm_2_L_c' if reflect == -1 else 'arm_2_c'}" group="3" rgba="0.9 0.9 0.9 1" />
+
+        <body name="${name}_3_link" pos="0.0895 0.0 -0.0015" quat="0.5 ${reflect * -0.5} ${reflect * -0.5} 0.5" >
+          <inertial mass="1.8" pos="0.007418 -0.004361 ${reflect * -0.134194}" fullinertia="0.019541 0.019936 0.002864 ${1 * -0.000105} -0.001717 ${reflect * 0.000852}"/>
+          <joint name="${name}_3_joint" axis="0 0 1" limited="true" range="${arm_3_lower_limit / 180 * pi} ${arm_3_upper_limit / 180 * pi}" damping="0.5" frictionloss="1" />
+          <geom name="${name}_arm_3"   type="mesh" mesh="${'arm_3_L' if reflect == -1 else 'arm_3'}"     group="2" rgba="0. 0. 0. 1" contype="0" conaffinity="0" />
+          <geom name="${name}_arm_3_c" type="mesh" mesh="${'arm_3_L_c' if reflect == -1 else 'arm_3_c'}" group="3" rgba="0.9 0.9 0.9 1" />
+
+          <!-- Elbow -->
+          <body name="${name}_4_link" pos="-0.02 -0.027 ${reflect * -0.222}" quat="0.5 ${reflect * -0.5} -0.5 ${reflect * -0.5}" >
+            <inertial mass="1.432697" pos="${reflect * -0.095658} ${reflect * 0.014666} ${reflect * 0.018133}" fullinertia="0.002040 0.008424 0.008686 ${reflect * 0.000725} ${-reflect * 0.001150} -0.000204" />
+            <joint name="${name}_4_joint" axis="0 0 1" limited="true" range="${-22.5/180 * pi} ${135/180 * pi}" damping="0.5" frictionloss="1" />
+            <geom name="${name}_arm_4"   type="mesh" mesh="${'arm_4_L' if reflect == -1 else 'arm_4'}"     group="2" rgba="0. 0. 0. 1" contype="0" conaffinity="0" />
+            <geom name="${name}_arm_4_c" type="mesh" mesh="${'arm_4_L_c' if reflect == -1 else 'arm_4_c'}" group="3" rgba="0.9 0.9 0.9 1" />
+          
+            <!-- Wrist -->
+            <xacro:wrist name="${name}" reflect="${reflect}" wrist_model="${wrist_model}" has_ft_sensor="${has_ft_sensor}" />
+
+          </body>
+        </body>
+      </body>
+    </body>
+  </xacro:macro>
+</mujoco>

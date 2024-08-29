@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<mujoco xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="tiago_assets">
+      <asset>
+        <!-- Torso visual -->
+        <mesh name="torso" file="$(find tiago_description)/meshes/torso/torso_fix.stl" />
+        <mesh name="torso_lift_with_arm" file="$(find tiago_description)/meshes/torso/torso_lift_with_arm.stl" />
+        <!-- Torso collision -->
+        <mesh name="torso_lift_with_arm_c0" file="$(find tiago_description)/meshes/torso/torso_lift_collision_core.stl" />
+        <mesh name="torso_lift_with_arm_c1" file="$(find tiago_description)/meshes/torso/torso_lift_collision_shoulder.stl" />
+        <mesh name="torso_lift_with_arm_c2" file="$(find tiago_description)/meshes/torso/torso_lift_collision_neck.stl" />
+
+        <!-- Head visual -->
+        <mesh name="head_1" file="$(find tiago_description)/meshes/head/head_1.stl" />
+        <mesh name="head_2" file="$(find tiago_description)/meshes/head/head_2.stl" />
+
+        <!-- Head collision -->
+        <mesh name="head_1_c" file="$(find tiago_description)/meshes/head/head_1_collision.stl" />
+        <mesh name="head_2_c" file="$(find tiago_description)/meshes/head/head_2_collision.stl" />
+        
+        <!-- Arm visual -->
+        <mesh name="arm_1" file="$(find tiago_description)/meshes/arm/arm_1.stl" />
+        <mesh name="arm_2" file="$(find tiago_description)/meshes/arm/arm_2.stl" />
+        <mesh name="arm_3" file="$(find tiago_description)/meshes/arm/arm_3.stl" />
+        <mesh name="arm_4" file="$(find tiago_description)/meshes/arm/arm_4.stl" />
+        <mesh name="arm_1_L" file="$(find tiago_description)/meshes/arm/arm_1.stl" scale="1 1 -1" />
+        <mesh name="arm_2_L" file="$(find tiago_description)/meshes/arm/arm_2.stl" scale="1 1 -1" />
+        <mesh name="arm_3_L" file="$(find tiago_description)/meshes/arm/arm_3.stl" scale="1 1 -1" />
+        <mesh name="arm_4_L" file="$(find tiago_description)/meshes/arm/arm_4.stl" scale="-1 -1 -1" />
+
+        <mesh name="arm_5"   file="$(find tiago_description)/meshes/arm/arm_5-${wrist_model}.stl" />
+        <!-- <mesh name="arm_5_L" file="$(find tiago_description)/meshes/arm/arm_5-${wrist_model}.stl" scale="-1 -1 -1" /> -->
+        
+        <mesh name="arm_6"   file="$(find tiago_description)/meshes/arm/arm_6-${wrist_model}.stl" />
+        <!-- <mesh name="arm_6_L" file="$(find tiago_description)/meshes/arm/arm_6-${wrist_model}.stl" scale="-1 1 1" /> -->
+
+        <!-- Arm collision -->
+        <mesh name="arm_1_c" file="$(find tiago_description)/meshes/arm/arm_1_collision.stl" />
+        <mesh name="arm_2_c" file="$(find tiago_description)/meshes/arm/arm_2_collision.stl" />
+        <mesh name="arm_3_c" file="$(find tiago_description)/meshes/arm/arm_3_collision.stl" />
+        <mesh name="arm_4_c" file="$(find tiago_description)/meshes/arm/arm_4_collision.stl" />
+
+        <mesh name="arm_1_L_c" file="$(find tiago_description)/meshes/arm/arm_1_collision.stl" scale="1 1 -1" />
+        <mesh name="arm_2_L_c" file="$(find tiago_description)/meshes/arm/arm_2_collision.stl" scale="1 1 -1" />
+        <mesh name="arm_3_L_c" file="$(find tiago_description)/meshes/arm/arm_3_collision.stl" scale="1 1 -1" />
+        <mesh name="arm_4_L_c" file="$(find tiago_description)/meshes/arm/arm_4_collision.stl" scale="-1 -1 -1" />
+
+        <mesh name="arm_5_c"   file="$(find tiago_description)/meshes/arm/arm_5_collision-${wrist_model}.stl" />
+        <!-- <mesh name="arm_5_L_c" file="$(find tiago_description)/meshes/arm/arm_5_collision-${wrist_model}.stl" scale="-1 -1 -1" /> -->
+        
+        <mesh name="arm_6_c"   file="$(find tiago_description)/meshes/arm/arm_6_collision-${wrist_model}.stl" />
+        <!-- <mesh name="arm_6_L_c" file="$(find tiago_description)/meshes/arm/arm_6_collision-${wrist_model}.stl" scale="-1 1 1" /> -->
+
+      </asset>
+
+      <xacro:if value="${end_effector == 'schunk-wsg'}">
+        <xacro:include filename="$(find pal_wsg_gripper_mujoco)/assets/xacro/gripper.mujoco.xacro" />
+        <xacro:pal_wsg_assets />
+      </xacro:if>
+  </xacro:macro>
+</mujoco>

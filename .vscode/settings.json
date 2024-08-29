@@ -1,0 +1,14 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/spectre/code/incr_ws/devel/lib/python3/dist-packages",
+        "/home/spectre/code/mujoco_ws/devel/lib/python3/dist-packages",
+        "/home/spectre/code/base_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/one/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/spectre/code/incr_ws/devel/lib/python3/dist-packages",
+        "/home/spectre/code/mujoco_ws/devel/lib/python3/dist-packages",
+        "/home/spectre/code/base_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/one/lib/python3/dist-packages"
+    ]
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tiago_simulation_mujoco</name>
+  <version>1.0.0</version>
+  <description>Tiago Simulation Packages for MuJoCo ROS</description>
+
+  <url type="repository">https://github.com/DavidPL1/tiago_simulation_mujoco</url>
+  <url type="bugtracker">https://github.com/DavidPL1/tiago_simulation_mujoco/issues</url>
+
+  <maintainer email="dleins@techfak.uni-bielefeld.de">David Leins</maintainer>
+  <author>David Leins</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>tiago_controller_configuration_mujoco</exec_depend>
+  <exec_depend>pal_hardware_mujoco</exec_depend>
+  <exec_depend>tiago_mujoco</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

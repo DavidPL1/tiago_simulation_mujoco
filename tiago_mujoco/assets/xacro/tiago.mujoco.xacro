@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<mujoco xmlns:xacro="http://ros.org/wiki/xacro">
+  <!--Constant parameters-->
+  <xacro:arg name="arm" default="true"/> <!-- true, false -->
+  <xacro:arg name="wrist_model" default="wrist-2010"/>
+  <xacro:arg name="end_effector" default="pal-hey5"/> <!-- false, pal-gripper, pal-hey5, schunk-wsg-->
+  <xacro:arg name="ft_sensor" default="schunk-ft"/> <!-- false, schunk-ft -->
+  <xacro:arg name="laser_model" default="sick-571"/> <!-- false, hokuyo, sick-551, sick-561, sick-571-->
+  <xacro:arg name="camera_model" default="orbbec-astra"/> <!-- false, orbbec-astra, orbbec-astra-pro, asus-xtion -->
+  <xacro:arg name="has_thermal_camera" default="false"/>
+  <xacro:arg name="multiple" default="false"/>
+  <xacro:arg name="namespace" default=""/>
+  <xacro:arg name="no_safety_eps" default="false"/>
+  <xacro:arg name="base_type" default="pmb2"/> <!-- pmb2, omni_base -->
+  <xacro:arg name="fixed_torso" default="false" />
+  <xacro:property name="wrist_model" value="$(arg wrist_model)" />
+  <xacro:property name="end_effector" value="$(arg end_effector)" />
+  <xacro:property name="ft_sensor" value="$(arg ft_sensor)" />
+  <xacro:property name="laser_model" value="$(arg laser_model)" />
+  <xacro:property name="camera_model" value="$(arg camera_model)" />
+  <xacro:property name="is_multiple" value="$(arg multiple)" />
+  <xacro:property name="nsp" value="$(arg namespace)" />
+  <xacro:property name="base_type" value="$(arg base_type)" />
+  <xacro:property name="no_safety_eps" value="$(arg no_safety_eps)" />
+  <xacro:property name="fixed_torso" value="$(arg fixed_torso)" />
+
+  <xacro:if value="$(arg arm)">
+    <xacro:if value="${wrist_model not in ['wrist-2010', 'wrist-2017']}">
+      <xacro:wrong_wrist_model/>
+    </xacro:if>
+  </xacro:if>
+  <xacro:if value="${end_effector not in ['false', False, 'pal-gripper', 'pal-hey5', 'schunk-wsg', 'schunk-wsg-cupro', 'robotiq-2f-85', 'robotiq-2f-140', 'robotiq-epick', 'custom', 'no-ee']}">
+    <xacro:wrong_end_effector/>
+  </xacro:if>
+  <xacro:if value="${ft_sensor not in ['false', False, 'schunk-ft']}">
+    <xacro:wrong_ft_sensor/>
+  </xacro:if>
+  <xacro:if value="${laser_model not in ['false', False, 'sick-551', 'sick-561', 'sick-571', 'hokuyo', 'ydlidar-tg30', 'ydlidar-tg15']}">
+    <xacro:wrong_laser_model/>
+  </xacro:if>
+  <xacro:if value="${camera_model not in ['false', False, 'orbbec-astra', 'orbbec-astra-pro', 'asus-xtion']}">
+    <xacro:wrong_camera_model/>
+  </xacro:if>
+  <xacro:if value="${base_type not in ['pmb2', 'omni_base']}">
+    <xacro:wrong_base_type/>
+  </xacro:if>
+   
+  <xacro:property name="has_arm"                 value="$(arg arm)"/>
+  <xacro:property name="has_schunk_ft"           value="${ft_sensor == 'schunk-ft'}"/>
+  <xacro:property name="has_ft_sensor"           value="${has_schunk_ft}"/> <!-- This should be OR'ed with other FT sensors-->
+  <xacro:property name="has_end_effector"        value="${end_effector not in ['false', False, 'no-ee']}"/>
+  <xacro:property name="end_effector_link"       value="${'wrist_ft_tool_link' if has_ft_sensor else 'arm_tool_link'}"/>
+  <xacro:property name="end_effector_name"       value="${'hand' if end_effector == 'pal-hey5' else 'gripper'}"/>
+
+  <xacro:property name="torso_max_vel"  value="0.07" />
+  <xacro:property name="torso_eps"      value="0.02" />
+  <xacro:property name="base_type"      value="$(arg base_type)" />
+
+  <xacro:include filename="$(find ${base_type}_mujoco)/assets/xacro/${base_type}.mujoco.xacro" />
+  <xacro:include filename="$(find ${base_type}_mujoco)/assets/xacro/assets.mujoco.xacro" />
+  <xacro:include filename="$(find ${base_type}_mujoco)/assets/xacro/contacts.mujoco.xacro" />
+  <xacro:include filename="$(find ${base_type}_mujoco)/assets/xacro/sensors.mujoco.xacro" />
+
+  <xacro:include filename="$(find tiago_mujoco)/assets/xacro/torso.mujoco.xacro" />
+
+  <xacro:macro name="tiago_robot" params="name pos rot torso_name:=torso arm_name:=arm" >
+    <xacro:if value="${base_type == 'pmb2'}" >
+      <xacro:pmb2_robot name="${name}" pos="${pos}" rot="${rot}" >
+        <xacro:tiago_torso name="${torso_name}" arm_name="${arm_name}" />
+      </xacro:pmb2_robot>
+    </xacro:if>
+  </xacro:macro>
+
+  <!-- <xacro:macro name="tiago_actuators" params="torso_name:=torso arm_name:=arm" >
+    <actuator>
+      <position kp="30" ctrllimited="true" joint="${torso_name}_lift_joint" name="${torso_name}_lift_joint" ctrlrange="0 0.35" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_1_joint" name="${arm_name}_1_joint" ctrlrange="0 2.74889" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_2_joint" name="${arm_name}_2_joint" ctrlrange="-1.5708 1.09083" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_3_joint" name="${arm_name}_3_joint" ctrlrange="-3.53429 1.5708" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_4_joint" name="${arm_name}_4_joint" ctrlrange="-0.392699 2.35619" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_5_joint" name="${arm_name}_5_joint" ctrlrange="-2.0944 2.0944" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_6_joint" name="${arm_name}_6_joint" ctrlrange="-1.41372 1.41372" />
+      <position kp="30" ctrllimited="true" joint="${arm_name}_7_joint" name="${arm_name}_7_joint" ctrlrange="-2.0944 2.0944" />
+      <position kp="30" ctrllimited="true" joint="gripper_right_finger_joint" name="gripper_right_finger_joint" ctrlrange="0 0.045" />
+      <position kp="30" ctrllimited="true" joint="gripper_finger_joint"  name="gripper_finger_joint" ctrlrange="0 0.045" />
+    </actuator>
+    <keyframe>
+      <key name="home" ctrl="0 0 0 0.180 -1.16 -0.19 2.01 1.57 -1.41 -1.51"/>
+    </keyframe>
+  </xacro:macro> -->
+</mujoco>
