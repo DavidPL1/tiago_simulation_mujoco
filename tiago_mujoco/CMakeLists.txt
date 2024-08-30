@@ -10,10 +10,6 @@ find_package(catkin REQUIRED)
 catkin_package(
 )
 
-install(PROGRAMS scripts/xacro_pipe
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
-)
-
-install(DIRECTORY launch assets #example config
+install(DIRECTORY launch assets example config
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
