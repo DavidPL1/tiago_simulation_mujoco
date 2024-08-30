@@ -4,7 +4,7 @@
   <!-- Robot Customization -->
   <arg name="rviz"        default="true"  doc="Should rviz be spawned?" />
 
-  <!-- <arg name="mujoco_plugin_config" default="$(find pmb2_mujoco)/config/default_mjplugin_config.yaml"             doc="Location of param file containing the mujoco plugin config" /> -->
+  <arg name="mujoco_plugin_config" default="$(find tiago_mujoco)/config/default_mjplugin_config.yaml"             doc="Location of param file containing the mujoco plugin config" />
   <arg name="use_sim_time" doc="should mujoco publish its simulation time as ros time?"/>
 
   <!-- Needed for nesting this launchfile in test launchfiles -->
