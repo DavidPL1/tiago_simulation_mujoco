@@ -57,5 +57,11 @@
         <xacro:include filename="$(find pal_wsg_gripper_mujoco)/assets/xacro/gripper.mujoco.xacro" />
         <xacro:pal_wsg_assets />
       </xacro:if>
+      <xacro:if value="${end_effector == 'schunk-wsg-cupro'}">
+        <xacro:include filename="$(find cupro_gripper_description)/mujoco/cupro_gripper.xml.xacro" />
+        <xacro:include filename="$(find pal_wsg_gripper_mujoco)/assets/xacro/gripper.mujoco.xacro" />
+        <xacro:pal_wsg_assets />
+        <xacro:cupro_gripper_assets />
+      </xacro:if>
   </xacro:macro>
 </mujoco>

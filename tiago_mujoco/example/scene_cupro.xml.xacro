@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <mujoco xmlns:xacro="http://ros.org/wiki/xacro" model="Tiago Scene">
   <!-- <compiler angle="radian" autolimits="false" /> -->
-  <compiler angle="radian" autolimits="false" balanceinertia="true" />
+  <compiler angle="radian" autolimits="true" balanceinertia="true" />
   <size njmax="500" nconmax="100"/>
 
   <xacro:include filename="$(find tiago_mujoco)/assets/xacro/tiago.mujoco.xacro" />
   <xacro:include filename="$(find tiago_mujoco)/assets/xacro/assets.mujoco.xacro" />
+  
 
   <xacro:pmb2_assets />
   <xacro:tiago_assets />
