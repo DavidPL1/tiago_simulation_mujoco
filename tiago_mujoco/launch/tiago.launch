@@ -3,6 +3,8 @@
 
   <!-- Robot Customization -->
   <arg name="rviz"        default="true"  doc="Should rviz be spawned?" />
+  <arg name="moveit"      default="true"  doc="Should moveit motion planning be started?" />
+  <arg name="tuck_arm"    default="true"  doc="Should the arm be moved to home position? (requires moveit/play motion)" />
 
   <arg name="mujoco_plugin_config" default="$(find tiago_mujoco)/config/default_mjplugin_config.yaml"             doc="Location of param file containing the mujoco plugin config" />
   <arg name="use_sim_time" doc="should mujoco publish its simulation time as ros time?"/>
@@ -106,22 +108,24 @@
     <node name="tuck_arm" pkg="tiago_mujoco" type="tuck_arm.py" output="screen" />
   </group>
 
-  <!-- Play motion -->
-  <include file="$(find tiago_clf_launch)/launch/play_motion.launch" >
-    <arg name="arm" value="$(arg arm)" />
-    <arg name="end_effector" value="$(arg end_effector)" />
-    <arg name="ft_sensor" value="$(arg ft_sensor)" />
-  </include>
+  <group if="$(arg moveit)">
+    <!-- Play motion -->
+    <include file="$(find tiago_clf_launch)/launch/play_motion.launch" >
+      <arg name="arm" value="$(arg arm)" />
+      <arg name="end_effector" value="$(arg end_effector)" />
+      <arg name="ft_sensor" value="$(arg ft_sensor)" />
+    </include>
 
-  <!-- Motion planning -->
-  <include file="$(find tiago_moveit_config)/launch/move_group.launch" >
-    <arg name="arm" value="$(arg arm)" />
-    <arg name="end_effector" value="$(arg end_effector)" />
-    <arg name="ft_sensor" value="$(arg ft_sensor)" />
-    <arg name="laser_model" value="$(arg laser_model)" />
-    <arg name="camera_model" value="$(arg camera_model)" />
-    <arg name="camera" value="$(arg use_moveit_camera)" />
-  </include>
+    <!-- Motion planning -->
+    <include file="$(find tiago_moveit_config)/launch/move_group.launch" >
+      <arg name="arm" value="$(arg arm)" />
+      <arg name="end_effector" value="$(arg end_effector)" />
+      <arg name="ft_sensor" value="$(arg ft_sensor)" />
+      <arg name="laser_model" value="$(arg laser_model)" />
+      <arg name="camera_model" value="$(arg camera_model)" />
+      <arg name="camera" value="$(arg use_moveit_camera)" />
+    </include>
+  </group>
 
   <!-- Point head action -->
   <group ns="head_controller">
@@ -137,6 +141,6 @@
   <!-- Add scan relay -->
   <node name="scan_to_scan_raw_relay" pkg="topic_tools" type="relay" args="scan scan_raw" />
 
-  <node  pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find pmb2_description)/config/show.rviz" if="$(arg rviz)"/>
+  <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find pmb2_description)/config/show.rviz" if="$(arg rviz)"/>
 
 </launch>
