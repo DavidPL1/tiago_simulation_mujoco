@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<mujoco xmlns:xacro="http://ros.org/wiki/xacro" model="Tiago Scene">
+<mujoco xmlns:xacro="http://ros.org/wiki/xacro" model="Tiago Cupro Scene">
   <!-- <compiler angle="radian" autolimits="false" /> -->
   <compiler angle="radian" autolimits="true" balanceinertia="true" />
+  <option noslip_iterations="1"/>
   <size njmax="500" nconmax="100"/>
 
   <xacro:include filename="$(find tiago_mujoco)/assets/xacro/tiago.mujoco.xacro" />
@@ -53,7 +54,7 @@
     </worldbody> -->
 
     <worldbody>
-        <body name="kitchen" pos="0.8 0. 0.1" euler="0 0 -1.57" >
+        <body name="kitchen" pos="1.0 0. 0.1" euler="0 0 -1.57" >
           <geom type="mesh" mesh="kitchen" rgba="0.9 0.9 0.9 1." />
         </body>
 

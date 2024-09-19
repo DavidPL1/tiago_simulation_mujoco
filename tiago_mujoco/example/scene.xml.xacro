@@ -2,6 +2,7 @@
 <mujoco xmlns:xacro="http://ros.org/wiki/xacro" model="Tiago Scene">
   <!-- <compiler angle="radian" autolimits="false" /> -->
   <compiler angle="radian" autolimits="true" balanceinertia="true" />
+  <option noslip_iterations="1"/>
   <size njmax="500" nconmax="100"/>
 
   <xacro:include filename="$(find tiago_mujoco)/assets/xacro/tiago.mujoco.xacro" />
