@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <launch>
 
+  <arg name="scene_xml" default="$(find tiago_mujoco)/example/scene.xml.xacro"/>
+
   <!-- Robot Customization -->
   <arg name="rviz"        default="true"  doc="Should rviz be spawned?" />
   <arg name="moveit"      default="true"  doc="Should moveit motion planning be started?" />
-  <arg name="tuck_arm"    default="true"  doc="Should the arm be moved to home position? (requires moveit/play motion)" />
+  <arg name="use_moveit_camera"    default="false"/>
 
   <arg name="mujoco_plugin_config" default="$(find tiago_mujoco)/config/default_mjplugin_config.yaml"             doc="Location of param file containing the mujoco plugin config" />
-  <arg name="use_sim_time" doc="should mujoco publish its simulation time as ros time?"/>
+  <arg name="use_sim_time"  default="true" doc="should mujoco publish its simulation time as ros time?"/>
 
   <!-- Needed for nesting this launchfile in test launchfiles -->
   <arg name="headless" default="false" />
@@ -24,7 +26,7 @@
 
   <arg name="arm"  default="True"/>
   <arg name="wrist_model"  default="wrist-2017"/>
-  <arg name="end_effector"  default="pal-hey5"/>
+  <arg name="end_effector"  default="schunk-wsg"/>
   <arg name="ft_sensor"  default="schunk-ft"/>
   <arg name="laser_model"  default="sick-571"/>
   <arg name="camera_model"  default="orbbec-astra"/>
@@ -42,16 +44,16 @@
 
   <rosparam ns="pal_robot_info" subst_value="true">
     type: "tiago"
-    end_effector: "schunk-wsg-cupro"
+    end_effector: "$(arg end_effector)"
     ft_sensor: "schunk-ft"
     laser_model: "sick-571"
-    camera_model: "asus-xtion"
+    camera_model: "orbbec-astra"
     base_type: "pmb2"
     arm: "True"
   </rosparam>
 
   <param name="mujoco_xml"
-         command="xacro $(find tiago_mujoco)/example/scene.xml.xacro
+         command="xacro $(arg scene_xml)
                   arm:=$(arg arm)
                   wrist_model:=$(arg wrist_model)
                   end_effector:=$(arg end_effector)
@@ -69,6 +71,7 @@
   <include file="$(find mujoco_ros)/launch/launch_server.launch" pass_all_args="true" >
     <arg name="console_config_file"  value="$(find pmb2_mujoco)/config/rosconsole.config" />
     <arg name="modelfile" value="$(arg xacro_outpath)" />
+    <arg name="initial_joint_states" value="$(find tiago_mujoco)/config/initial_joint_states.yaml"/>
     <!-- Not working because of MuJoCo Bug, see hack above -->
     <!-- <arg name="wait_for_xml" value="true" /> -->
   </include>
@@ -103,10 +106,6 @@
 
   <!-- Republish image_raw to image_rect_color to have the same available topic -->
   <node name="image_raw_to_rect_color_relay" pkg="topic_tools" type="relay" args="xtion/rgb/image_raw xtion/rgb/image_rect_color" />
-
-  <group if="$(arg tuck_arm)">
-    <node name="tuck_arm" pkg="tiago_mujoco" type="tuck_arm.py" output="screen" />
-  </group>
 
   <group if="$(arg moveit)">
     <!-- Play motion -->
