@@ -94,7 +94,8 @@
 
   <!-- <node name="joint_state_publisher" type="joint_state_publisher" pkg="joint_state_publisher" /> -->
 
-  <node pkg="robot_pose" type="robot_pose_node" name="robot_pose_publisher" output="screen"/>
+  <node pkg="robot_pose_publisher" type="robot_pose_publisher" name="robot_pose_publisher"/>
+  <!--node pkg="robot_pose" type="robot_pose_node" name="robot_pose_publisher" output="screen"/-->
 
   <!-- TF lookup -->
   <node pkg="tf_lookup" type="tf_lookup" name="tf_lookup" output="screen" />
