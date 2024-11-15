@@ -16,3 +16,11 @@ MujocoPlugins:
       min_angle: -1.57
       max_angle: 1.57
       name: scan
+
+cam_config:
+  camera:
+    stream_type: 3 # RGB and DEPTH
+    frequency: 15
+    width: 1024
+    height: 768
+    topic: "/camera/"

@@ -21,8 +21,14 @@
         <joint name="head_2_joint" axis="0 0 1" limited="true" range="${head_2_lower_limit / 180 * pi} ${head_2_upper_limit / 180 * pi}" damping="0.5" frictionloss="1" />
         <geom name="${name}_head_2"   rgba="1 1 1 1" type="mesh" mesh="head_2"   group="2" contype="0" conaffinity="0" />
         <geom name="${name}_head_2_c" rgba="1 1 1 1" type="mesh" mesh="head_2_c" group="3" />
+    
+        <body name="realsense_link" pos="0.076 0.176 0.021" euler="-1.5707963 0.0169727 0.0">
+          <!-- link -> optical -->
+          <camera name="camera" fovy="43" pos="-0.002 0.008 0.0058" quat="-0.5 -0.5 0.5 0.5"></camera>
+        </body>
+
       </body>
+
     </body>
   </xacro:macro>
 </mujoco>
-
