@@ -23,4 +23,5 @@ cam_config:
     frequency: 15
     width: 1024
     height: 768
-    topic: "/camera/"
+    topic: "/camera"
+    name_rgb: "color"
