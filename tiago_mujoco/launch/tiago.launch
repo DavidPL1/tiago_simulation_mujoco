@@ -36,6 +36,9 @@
   <arg name="description_calibration_dir" value="$(optenv pal_eye_hand_calibration_tiago_calibration_path)"/>
   <arg name="extrinsic_calibration_dir" value="$(optenv pal_camera_calibration_extrinsics_calibration_path)"/>
 
+  <arg name="initial_joint_states_file" default="initial_joint_states.yaml"/>
+  <arg name="initial_joint_states" default="$(find tiago_mujoco)/config/$(arg initial_joint_states_file)"/>
+
   <param name="/use_sim_time" value="$(arg use_sim_time)"/>
 
   <!-- <rosparam command="load" file="$(find pmb2_description)/config/joint_limits.yaml" /> -->
@@ -71,7 +74,7 @@
   <include file="$(find mujoco_ros)/launch/launch_server.launch" pass_all_args="true" >
     <arg name="console_config_file"  value="$(find pmb2_mujoco)/config/rosconsole.config" />
     <arg name="modelfile" value="$(arg xacro_outpath)" />
-    <arg name="initial_joint_states" value="$(find tiago_mujoco)/config/initial_joint_states.yaml"/>
+    <arg name="initial_joint_states" value="$(arg initial_joint_states)"/>
     <!-- Not working because of MuJoCo Bug, see hack above -->
     <!-- <arg name="wait_for_xml" value="true" /> -->
   </include>
