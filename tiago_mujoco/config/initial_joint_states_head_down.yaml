@@ -1,6 +1,8 @@
 initial_joint_positions:
   joint_map:
     torso_lift_joint: "0.15" 
+    gripper_right_finger_joint: "0.004"
+    gripper_finger_joint: "0.004"
     arm_1_joint : "0.2"
     arm_2_joint : "-1.34"
     arm_3_joint : "-0.2"
