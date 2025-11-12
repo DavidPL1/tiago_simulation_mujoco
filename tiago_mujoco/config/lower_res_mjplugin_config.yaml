@@ -1,0 +1,29 @@
+MujocoPlugins:
+  - type: mujoco_ros_control_pal/MujocoRosControlPlugin
+    hardware:
+      type: mujoco_ros_control_pal/DefaultRobotHWSim
+      control_period: 0.001
+  - type: mujoco_wrench/MujocoWrenchPlugin
+    hz: 20
+  - type: mujoco_ros_laser/LaserPlugin
+    sensors:
+    - site_attached: tiago_laser_site
+      frame_id: base_lase_link
+      visualize: false
+      update_rate: 10.
+      min_range: 0.1
+      max_range: 30.
+      range_resolution: 0.01
+      angular_resolution: 0.08
+      min_angle: -1.57
+      max_angle: 1.57
+      name: scan
+
+cam_config:
+  camera:
+    stream_type: 3 # RGB and DEPTH
+    frequency: 15
+    width: 1024
+    height: 768
+    topic: "/camera"
+    name_rgb: "color"

@@ -2,11 +2,13 @@
 <mujoco xmlns:xacro="http://ros.org/wiki/xacro" model="Tiago Scene">
   <!-- <compiler angle="radian" autolimits="false" /> -->
   <compiler angle="radian" autolimits="true" balanceinertia="true" />
-  <option noslip_iterations="3"/>
+  <option impratio="1000" noslip_iterations="3" cone="elliptic"/>
   <size njmax="500" nconmax="100"/>
 
   <xacro:include filename="$(find tiago_mujoco)/assets/xacro/tiago.mujoco.xacro" />
   <xacro:include filename="$(find tiago_mujoco)/assets/xacro/assets.mujoco.xacro" />
+  <xacro:include filename="$(find cupro_gripper_description)/mujoco/gripper.mujoco.xacro" />
+  <xacro:include filename="$(find cupro_gripper_description)/mujoco/cupro_gripper.xml.xacro" />
 
   <xacro:pmb2_assets />
   <xacro:tiago_assets />
@@ -18,6 +20,9 @@
     <rgba haze="0.15 0.25 0.35 1"/>
     <global azimuth="120" elevation="-20"/>
   </visual>
+
+  <xacro:cupro_couple name="gripper"/>
+  <xacro:pal_wsg_contacts_disable name="gripper"/>
 
   <asset>
     <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
@@ -40,6 +45,10 @@
 
   <xacro:pmb2_contacts name="tiago" />
   <xacro:pmb2_sensors name="tiago" />
+  <sensor>
+    <force name="left_fingertip" site="gripper_finger_l_site"/>
+    <force name="right_fingertip" site="gripper_finger_r_site"/>
+  </sensor>
 
     <worldbody>
         <geom name="Table" type="box" pos="0.56428 0.000584 0.2099115" size="0.2265785 0.3210245 0.2099115" rgba=".5 .5 .5 1" />
@@ -48,9 +57,9 @@
     </worldbody>
 
     <worldbody>
-        <body name="stone" pos="0.56428 -0.221972 0.475172">
+        <body name="stone" pos="0.41226650885226 0.0358241598971853 0.452">
             <freejoint/>
-            <geom type="box" size=".0125 .016 .032" rgba=".5 .5 .5 1" />
+            <geom type="cylinder" size=".0255  .032" rgba=".5 .5 .5 1" />
             <inertial pos="0 0 0" mass="0.1024" diaginertia="4.369e-5 4.028e-5 1.407e-5"/>
         </body>
     </worldbody>

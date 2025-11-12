@@ -8,7 +8,8 @@
   <arg name="moveit"      default="true"  doc="Should moveit motion planning be started?" />
   <arg name="use_moveit_camera"    default="false"/>
 
-  <arg name="mujoco_plugin_config" default="$(find tiago_mujoco)/config/default_mjplugin_config.yaml"             doc="Location of param file containing the mujoco plugin config" />
+  <arg name="mujoco_plugin_file" default="lower_res_mjplugin_config.yaml"/>
+  <arg name="mujoco_plugin_config" default="$(find tiago_mujoco)/config/$(arg mujoco_plugin_file)"             doc="Location of param file containing the mujoco plugin config" />
   <arg name="use_sim_time"  default="true" doc="should mujoco publish its simulation time as ros time?"/>
 
   <!-- Needed for nesting this launchfile in test launchfiles -->
