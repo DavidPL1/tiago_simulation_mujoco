@@ -66,7 +66,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 )
 
 install(FILES
-    mujoco_ros_sensors_plugin.xml
+    mujoco_wrench_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
