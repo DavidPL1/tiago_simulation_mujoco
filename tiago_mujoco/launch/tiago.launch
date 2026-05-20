@@ -96,16 +96,13 @@
     <param name="use_tf_static" type="bool" value="true" />
   </node>
 
-  <!-- navcam calib -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="navcam_calibration" args="0.24779 0.02311 -0.0042106 0 0.54003 0 0.84165 torso_lift_link navcam_link" />
-
   <!-- <node name="joint_state_publisher" type="joint_state_publisher" pkg="joint_state_publisher" /> -->
 
   <node pkg="robot_pose_publisher" type="robot_pose_publisher" name="robot_pose_publisher"/>
   <!--node pkg="robot_pose" type="robot_pose_node" name="robot_pose_publisher" output="screen"/-->
 
   <!-- TF lookup -->
-  <node pkg="tf_lookup" type="tf_lookup" name="tf_lookup" output="screen" />
+  <!--node pkg="tf_lookup" type="tf_lookup" name="tf_lookup" output="screen" /-->
 
   <!-- Twist mux -->
   <include file="$(find tiago_bringup)/launch/twist_mux.launch" >
@@ -113,7 +110,55 @@
   </include>
 
   <!-- Republish image_raw to image_rect_color to have the same available topic -->
-  <node name="image_raw_to_rect_color_relay" pkg="topic_tools" type="relay" args="xtion/rgb/image_raw xtion/rgb/image_rect_color" />
+  <!--node name="image_raw_to_rect_color_relay" pkg="topic_tools" type="relay" args="camera/color/image_raw camera/color/image_rect_color" /-->
+
+  <group ns="navcam">
+    <!-- navcam calib -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="navcam_calibration" args="0.24779 0.02311 -0.0042106 0.537 0 0.843 0 torso_lift_link navcam_calibration" />
+
+    <node pkg="nodelet" type="nodelet" name="realsense2_navcam_manager" args="manager" output="screen"/>
+
+    <!-- Publish registered XYZ point cloud -->
+    <node pkg="nodelet" type="nodelet" name="navcam_points_xyz_registered"
+          args="load depth_image_proc/point_cloud_xyz realsense2_navcam_manager false" respawn="false">
+      <remap from="image_rect"        to="depth/image_raw" />
+      <remap from="camera_info"       to="depth/camera_info" />
+      <remap from="points"            to="depth/points" />
+    </node>
+
+    <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+    <node pkg="nodelet" type="nodelet" respawn="true" name="navcam_voxel" args="load pcl/VoxelGrid  realsense2_navcam_manager true" output="screen">
+        <!-- enable_pointcloud will add a pointcloud topic /camera/depth/color/points -->
+        <remap from="~input" to="depth/color/points" />
+        <remap from="~output" to="depth/voxel" />
+        <rosparam>
+            leaf_size: 0.05
+            filter_field_name: z
+            filter_limit_min: 0.02
+            filter_limit_max: 3
+            filter_limit_negative: false
+            min_points_per_voxel: 50
+        </rosparam>
+    </node>
+
+    <!-- Run a CropBox filter to the robot base -->
+    <node pkg="nodelet" type="nodelet" respawn="true" name="navcam_crop" args="load pcl/CropBox  realsense2_navcam_manager true" output="screen">
+        <remap from="~input" to="depth/voxel" />
+        <!-- default topic of stock tiago head cam is /xtion/filtered/points -->
+        <remap from="~output" to="/xtion/filtered/points" />
+        <rosparam>
+            negative: false
+            input_frame: base_footprint
+            min_x: 0.275
+            max_x: 5
+            min_y: -0.6
+            max_y: 0.6
+            min_z: 0.03
+            max_z: 2.27
+        </rosparam>
+    </node>
+
+  </group>
 
   <group if="$(arg moveit)">
     <!-- Play motion -->

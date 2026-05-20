@@ -27,9 +27,9 @@ cam_config:
     height: 768
     topic: "/camera"
     name_rgb: "color"
-  nav_cam:
-    stream_type: 2 # DEPTH
+  navcam:
+    stream_type: 3 # DEPTH
     frequency: 15
     width: 640
     height: 480
-    topic: "/nav_cam"
+    topic: "/navcam"
