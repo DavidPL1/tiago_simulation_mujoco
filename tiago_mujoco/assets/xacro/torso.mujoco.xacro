@@ -23,6 +23,10 @@
           <geom name="${name}_lift_c1" rgba="1 1 1 1" type="mesh" mesh="torso_lift_with_arm_c1" group="3" />
           <geom name="${name}_lift_c2" rgba="1 1 1 1" type="mesh" mesh="torso_lift_with_arm_c2" group="3" />
 
+          <body name="navcam_calibration" pos="0.24779 0.02311 -0.0042106" quat="0 0.54003 0 0.84165">
+             <camera name="nav_cam" fovy="58" pos="0 0 0" quat="0.5 0.5 0.5 0.5"></camera>
+          </body>
+
           <xacro:head name="${name}" />
 
           <xacro:if value="${has_arm == True}">

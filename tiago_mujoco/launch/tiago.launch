@@ -96,6 +96,9 @@
     <param name="use_tf_static" type="bool" value="true" />
   </node>
 
+  <!-- navcam calib -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="navcam_calibration" args="0.24779 0.02311 -0.0042106 0 0.54003 0 0.84165 torso_lift_link navcam_link" />
+
   <!-- <node name="joint_state_publisher" type="joint_state_publisher" pkg="joint_state_publisher" /> -->
 
   <node pkg="robot_pose_publisher" type="robot_pose_publisher" name="robot_pose_publisher"/>
