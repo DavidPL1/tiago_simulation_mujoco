@@ -129,7 +129,7 @@
     <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
     <node pkg="nodelet" type="nodelet" respawn="true" name="navcam_voxel" args="load pcl/VoxelGrid  realsense2_navcam_manager true" output="screen">
         <!-- enable_pointcloud will add a pointcloud topic /camera/depth/color/points -->
-        <remap from="~input" to="depth/color/points" />
+        <remap from="~input" to="depth/points" />
         <remap from="~output" to="depth/voxel" />
         <rosparam>
             leaf_size: 0.05
