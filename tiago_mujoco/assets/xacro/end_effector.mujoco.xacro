@@ -26,6 +26,10 @@
       <xacro:include filename="$(find cupro_gripper_description)/mujoco/wsg_cupro.xml.xacro" />
       <xacro:wsg_cupro_gripper name="${name}" xyz="0.01 0 0" quat="0 0.707107 0 -0.707107" num_finger_l="1" num_finger_r="2" />
     </xacro:if>
+    <xacro:if value="${type == 'schunk-wsg-cupro-4'}">
+      <xacro:include filename="$(find cupro_gripper_description)/mujoco/wsg_cupro.xml.xacro" />
+      <xacro:wsg_cupro_gripper name="${name}" xyz="0.01 0 0" quat="0 0.707107 0 -0.707107" num_finger_l="2" num_finger_r="2" />
+    </xacro:if>
   </xacro:macro>
 </mujoco>
 

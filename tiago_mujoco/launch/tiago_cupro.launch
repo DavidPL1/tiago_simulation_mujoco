@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="end_effector" value="schunk-wsg-cupro"/>
+  <arg name="end_effector" value="schunk-wsg-cupro-4"/>
   <arg name="scene_xml" value="$(find tiago_mujoco)/example/scene_cupro.xml.xacro"/>
 
   <include file="$(find tiago_mujoco)/launch/tiago.launch" pass_all_args="true" />

@@ -27,7 +27,7 @@
         <include file="$(find pal_gripper_controller_configuration_mujoco)/launch/gripper_controller.launch"/>
     </group>
 
-    <group if="$(eval end_effector == 'schunk-wsg' or end_effector == 'schunk-wsg-cupro')">
+    <group if="$(eval end_effector == 'schunk-wsg' or end_effector == 'schunk-wsg-cupro' or end_effector == 'schunk-wsg-cupro-4')">
         <rosparam command="load" file="$(find tiago_controller_configuration)/config/schunk-wsg_joint_trajectory_controllers.yaml" />
         <include file="$(find pal_wsg_gripper_controller_configuration_mujoco)/launch/gripper_fingertip_sensor_controller.launch">
           <arg name="finger" value="left"/>

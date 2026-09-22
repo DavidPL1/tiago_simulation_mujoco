@@ -46,7 +46,7 @@
 
   <rosparam ns="pal_robot_info" subst_value="true">
     type: "tiago"
-    end_effector: "schunk-wsg-cupro"
+    end_effector: "schunk-wsg-cupro-4"
     ft_sensor: "schunk-ft"
     laser_model: "sick-571"
     camera_model: "asus-xtion"
